@@ -1,3 +1,6 @@
+// Respect reduced-motion preference (declared first — used by multiple blocks below)
+const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 // Mobile menu
 const openMenu = document.getElementById('openMenu');
 const closeMenu = document.getElementById('closeMenu');
@@ -63,7 +66,6 @@ window.addEventListener('scroll', () => {
 }, { passive:true });
 
 // Scroll reveal
-const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 if(prefersReduced){
   document.querySelectorAll('.reveal').forEach(el => el.classList.add('in-view'));
 } else {
