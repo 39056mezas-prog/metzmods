@@ -7,11 +7,22 @@ const closeMenu = document.getElementById('closeMenu');
 const navLinks = document.getElementById('navLinks');
 const navBackdrop = document.getElementById('navBackdrop');
 function toggleMenu(open){
-  navLinks.classList.toggle('open', open);
+  if(open){
+    navLinks.style.display = 'flex';
+    navLinks.offsetHeight; // force reflow so the browser registers the pre-transition state
+    navLinks.classList.add('open');
+  } else {
+    navLinks.classList.remove('open');
+  }
   if(navBackdrop) navBackdrop.classList.toggle('show', open);
   openMenu.setAttribute('aria-expanded', String(open));
   document.body.style.overflow = open ? 'hidden' : '';
 }
+navLinks.addEventListener('transitionend', e => {
+  if(e.propertyName === 'transform' && !navLinks.classList.contains('open')){
+    navLinks.style.display = 'none';
+  }
+});
 openMenu.addEventListener('click', () => toggleMenu(true));
 closeMenu.addEventListener('click', () => toggleMenu(false));
 navLinks.querySelectorAll('a[data-nav]').forEach(a => a.addEventListener('click', () => toggleMenu(false)));
