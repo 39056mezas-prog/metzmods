@@ -146,14 +146,14 @@ nav{display:flex;align-items:center;justify-content:space-between;gap:24px;heigh
 .icon-badge{width:64px;height:64px;border-radius:50%;background:var(--gradient);display:flex;align-items:center;justify-content:center;margin-bottom:26px;}
 .icon-badge svg{width:32px;height:32px;color:var(--black);fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;}
 /* Services runs light instead of dark, for contrast/breathing room against the rest of the page */
-#services{background:#f5f3ef;}
-#services h2{color:#181818;}
-#services .section-head p{color:#5c5a53;}
-#services .services-grid{background:#e2dfd8;border-color:#e2dfd8;}
-#services .service-card{background:#fbfaf7;}
-#services .service-card:hover{background:#efece5;}
-#services .service-card h3{color:#181818;}
-#services .service-card p{color:#5c5a53;}
+#maintenance{background:#f5f3ef;}
+#maintenance h2{color:#181818;}
+#maintenance .section-head p{color:#5c5a53;}
+#maintenance .services-grid{background:#e2dfd8;border-color:#e2dfd8;}
+#maintenance .service-card{background:#fbfaf7;}
+#maintenance .service-card:hover{background:#efece5;}
+#maintenance .service-card h3{color:#181818;}
+#maintenance .service-card p{color:#5c5a53;}
 .service-card h3{margin-bottom:12px;}
 .service-card p{font-size:.97rem;}
 @media (max-width:900px){.services-grid{grid-template-columns:repeat(2,1fr);}}
