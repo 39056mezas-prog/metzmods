@@ -166,7 +166,7 @@
   </section>
 
   <!-- ============ CONTACT / BOOKING ============ -->
-  <section id="contact" class="has-bg-image" style="--bg-img:url('street-bmw.webp');">
+  <section id="contact" class="has-bg-image-light" style="--bg-img:url('street-bmw.webp');">
     <div class="container">
       <div class="section-head reveal">
         <p class="kicker">Let's Build Something</p>
@@ -204,14 +204,14 @@
       <div class="gallery-carousel reveal">
         <button class="gallery-nav prev" aria-label="Previous photo"><svg class="icon"><use href="#i-chevron"/></svg></button>
         <div class="gallery-track" id="galleryTrack">
-          <div class="gallery-slide"><span class="gallery-stripes" aria-hidden="true"><span></span><span></span><span></span></span><img src="street-bmw.webp" alt="BMW E46 stance build" loading="lazy"><span class="build-caption">BMW E46 — Stance Build</span></div>
-          <div class="gallery-slide"><span class="gallery-stripes" aria-hidden="true"><span></span><span></span><span></span></span><img src="trail-4runner.webp" alt="Toyota 4Runner trail rig" loading="lazy"><span class="build-caption">Toyota 4Runner — Trail Rig</span></div>
-          <div class="gallery-slide"><span class="gallery-stripes" aria-hidden="true"><span></span><span></span><span></span></span><img src="street-lexus.webp" alt="Lexus IS300 street build" loading="lazy"><span class="build-caption">Lexus IS300 — Street Build</span></div>
-          <div class="gallery-slide"><span class="gallery-stripes" aria-hidden="true"><span></span><span></span><span></span></span><img src="trail-jeep.webp" alt="Jeep Cherokee trail ready" loading="lazy"><span class="build-caption">Jeep Cherokee — Trail Ready</span></div>
-          <div class="gallery-slide"><span class="gallery-stripes" aria-hidden="true"><span></span><span></span><span></span></span><img src="street-engine.webp" alt="Turbo engine bay build" loading="lazy"><span class="build-caption">Built For Boost</span></div>
-          <div class="gallery-slide"><span class="gallery-stripes" aria-hidden="true"><span></span><span></span><span></span></span><img src="trail-frontier.webp" alt="Nissan Frontier off-road build" loading="lazy"><span class="build-caption">Nissan Frontier — Off-Road Build</span></div>
-          <div class="gallery-slide"><span class="gallery-stripes" aria-hidden="true"><span></span><span></span><span></span></span><img src="street-coilover.webp" alt="Coilover suspension install" loading="lazy"><span class="build-caption">Coilover Install</span></div>
-          <div class="gallery-slide"><span class="gallery-stripes" aria-hidden="true"><span></span><span></span><span></span></span><img src="trail-suspension.webp" alt="Truck lift kit and level kit install" loading="lazy"><span class="build-caption">Truck Lift Kit Installs &amp; Level Kits</span></div>
+          <div class="gallery-slide" data-lightbox-index="0"><span class="gallery-stripes" aria-hidden="true"><span></span><span></span><span></span></span><img src="street-bmw.webp" alt="BMW E46 stance build" loading="lazy" data-lightbox-index="0"><span class="build-caption">BMW E46 — Stance Build</span></div>
+          <div class="gallery-slide" data-lightbox-index="1"><span class="gallery-stripes" aria-hidden="true"><span></span><span></span><span></span></span><img src="trail-4runner.webp" alt="Toyota 4Runner trail rig" loading="lazy" data-lightbox-index="1"><span class="build-caption">Toyota 4Runner — Trail Rig</span></div>
+          <div class="gallery-slide" data-lightbox-index="2"><span class="gallery-stripes" aria-hidden="true"><span></span><span></span><span></span></span><img src="street-lexus.webp" alt="Lexus IS300 street build" loading="lazy" data-lightbox-index="2"><span class="build-caption">Lexus IS300 — Street Build</span></div>
+          <div class="gallery-slide" data-lightbox-index="3"><span class="gallery-stripes" aria-hidden="true"><span></span><span></span><span></span></span><img src="trail-jeep.webp" alt="Jeep Cherokee trail ready" loading="lazy" data-lightbox-index="3"><span class="build-caption">Jeep Cherokee — Trail Ready</span></div>
+          <div class="gallery-slide" data-lightbox-index="4"><span class="gallery-stripes" aria-hidden="true"><span></span><span></span><span></span></span><img src="street-engine.webp" alt="Turbo engine bay build" loading="lazy" data-lightbox-index="4"><span class="build-caption">Built For Boost</span></div>
+          <div class="gallery-slide" data-lightbox-index="5"><span class="gallery-stripes" aria-hidden="true"><span></span><span></span><span></span></span><img src="trail-frontier.webp" alt="Nissan Frontier off-road build" loading="lazy" data-lightbox-index="5"><span class="build-caption">Nissan Frontier — Off-Road Build</span></div>
+          <div class="gallery-slide" data-lightbox-index="6"><span class="gallery-stripes" aria-hidden="true"><span></span><span></span><span></span></span><img src="street-coilover.webp" alt="Coilover suspension install" loading="lazy" data-lightbox-index="6"><span class="build-caption">Coilover Install</span></div>
+          <div class="gallery-slide" data-lightbox-index="7"><span class="gallery-stripes" aria-hidden="true"><span></span><span></span><span></span></span><img src="trail-suspension.webp" alt="Truck lift kit and level kit install" loading="lazy" data-lightbox-index="7"><span class="build-caption">Truck Lift Kit Installs &amp; Level Kits</span></div>
         </div>
         <button class="gallery-nav next" aria-label="Next photo"><svg class="icon"><use href="#i-chevron"/></svg></button>
       </div>
@@ -318,6 +318,17 @@
       </div>
     </div>
   </section>
+
+<!-- ============ GALLERY LIGHTBOX ============ -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" hidden>
+  <button class="lightbox-close" id="lightboxClose" aria-label="Close photo viewer"><svg class="icon"><use href="#i-close"/></svg></button>
+  <button class="lightbox-arrow prev" id="lightboxPrev" aria-label="Previous photo"><svg class="icon"><use href="#i-chevron"/></svg></button>
+  <div class="lightbox-stage" id="lightboxStage">
+    <img id="lightboxImg" src="" alt="">
+    <p class="lightbox-caption" id="lightboxCaption"></p>
+  </div>
+  <button class="lightbox-arrow next" id="lightboxNext" aria-label="Next photo"><svg class="icon"><use href="#i-chevron"/></svg></button>
+</div>
 
 </main>
 

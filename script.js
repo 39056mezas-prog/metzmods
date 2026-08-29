@@ -90,6 +90,65 @@ if(galleryTrack){
   });
   // Prevent the drag from also triggering an accidental image click/navigation
   galleryTrack.addEventListener('click', e => { if(dragMoved) e.preventDefault(); }, true);
+
+  // Lightbox: click a slide to view it full-size, arrows/swipe/keys to move through the set
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const lightboxCaption = document.getElementById('lightboxCaption');
+  const lightboxClose = document.getElementById('lightboxClose');
+  const lightboxPrev = document.getElementById('lightboxPrev');
+  const lightboxNext = document.getElementById('lightboxNext');
+  const slides = [...galleryTrack.querySelectorAll('.gallery-slide')].map(slide => ({
+    src: slide.querySelector('img').getAttribute('src'),
+    alt: slide.querySelector('img').getAttribute('alt'),
+    caption: slide.querySelector('.build-caption') ? slide.querySelector('.build-caption').textContent : ''
+  }));
+  let lbIndex = 0;
+
+  function renderLightbox(){
+    lightboxImg.classList.remove('show');
+    lightboxImg.src = slides[lbIndex].src;
+    lightboxImg.alt = slides[lbIndex].alt;
+    lightboxCaption.textContent = slides[lbIndex].caption;
+    lightboxImg.onload = () => lightboxImg.classList.add('show');
+  }
+  function openLightbox(i){
+    if(dragMoved) return;
+    lbIndex = i;
+    renderLightbox();
+    lightbox.hidden = false;
+    requestAnimationFrame(() => lightbox.classList.add('open'));
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox(){
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+    setTimeout(() => { lightbox.hidden = true; }, 300);
+  }
+  function stepLightbox(dir){
+    lbIndex = (lbIndex + dir + slides.length) % slides.length;
+    renderLightbox();
+  }
+
+  galleryTrack.querySelectorAll('.gallery-slide').forEach(slide => {
+    slide.addEventListener('click', () => openLightbox(Number(slide.dataset.lightboxIndex)));
+  });
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightboxPrev.addEventListener('click', () => stepLightbox(-1));
+  lightboxNext.addEventListener('click', () => stepLightbox(1));
+  lightbox.addEventListener('click', e => { if(e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', e => {
+    if(lightbox.hidden) return;
+    if(e.key === 'Escape') closeLightbox();
+    if(e.key === 'ArrowLeft') stepLightbox(-1);
+    if(e.key === 'ArrowRight') stepLightbox(1);
+  });
+  let lbTouchX = 0;
+  lightbox.addEventListener('touchstart', e => { lbTouchX = e.touches[0].clientX; }, { passive:true });
+  lightbox.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - lbTouchX;
+    if(Math.abs(dx) > 40) stepLightbox(dx > 0 ? -1 : 1);
+  }, { passive:true });
 }
 
 // Sticky header shadow
