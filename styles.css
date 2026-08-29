@@ -40,8 +40,8 @@ section{padding:112px 0;}
 
 /* Contact: white/light variant — same blurred photo, white overlay instead of dark, for hierarchy/separation right under the hero */
 .has-bg-image-light{position:relative;overflow:hidden;}
-.has-bg-image-light::before{content:'';position:absolute;inset:-12px;background-image:var(--bg-img);background-size:cover;background-position:center;filter:blur(6px) brightness(1.15);z-index:0;}
-.has-bg-image-light::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg, rgba(247,246,243,.88), rgba(247,246,243,.97));z-index:0;}
+.has-bg-image-light::before{content:'';position:absolute;inset:-12px;background-image:var(--bg-img);background-size:cover;background-position:center;filter:blur(11px) brightness(1.15);z-index:0;}
+.has-bg-image-light::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg, rgba(247,246,243,.68), rgba(247,246,243,.84));z-index:0;}
 .has-bg-image-light > .container{position:relative;z-index:1;}
 #contact .section-head .kicker{color:var(--orange);}
 #contact .section-head h2{color:#181818;}
