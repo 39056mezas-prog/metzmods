@@ -38,20 +38,6 @@ section{padding:112px 0;}
 .has-bg-image::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg, rgba(10,10,10,.38), rgba(10,10,10,.76));z-index:0;}
 .has-bg-image > .container{position:relative;z-index:1;}
 
-/* Contact: white/light variant — same blurred photo, white overlay instead of dark, for hierarchy/separation right under the hero */
-.has-bg-image-light{position:relative;overflow:hidden;}
-.has-bg-image-light::before{content:'';position:absolute;inset:-12px;background-image:var(--bg-img);background-size:cover;background-position:center;filter:blur(11px) brightness(1.15);z-index:0;}
-.has-bg-image-light::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg, rgba(247,246,243,.68), rgba(247,246,243,.84));z-index:0;}
-.has-bg-image-light > .container{position:relative;z-index:1;}
-#contact .section-head .kicker{color:var(--orange);}
-#contact .section-head h2{color:#181818;}
-#contact .section-head p{color:#5c5a53;}
-#contact .contact-whatsapp-link{color:#6b6a63;}
-#contact .contact-whatsapp-link:hover{color:#1ea952;}
-#contact .contact-info-strip{background:#fbfaf7;border-color:#e2dfd8;}
-#contact .info-block h4{color:#8a887f;}
-#contact .info-block p{color:#181818;}
-#contact .info-block p a{color:#181818;}
 @media (max-width:900px){section{padding:80px 0;}}
 @media (max-width:560px){section{padding:64px 0;} .container{padding:0 20px;}}
 :focus-visible{outline:2px solid var(--yellow);outline-offset:3px;}
