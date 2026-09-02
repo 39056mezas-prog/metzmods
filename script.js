@@ -217,6 +217,7 @@ document.querySelectorAll('.faq-trigger').forEach(btn => {
     const expanded = btn.getAttribute('aria-expanded') === 'true';
     btn.setAttribute('aria-expanded', String(!expanded));
     document.getElementById(btn.getAttribute('aria-controls')).classList.toggle('open', !expanded);
+    btn.closest('.faq-item').classList.toggle('open', !expanded);
   });
 });
 
