@@ -39,7 +39,15 @@ if(heroBgEl){
   function showHeroSlide(i){
     heroIndex = (i + heroSlides.length) % heroSlides.length;
     heroSlides.forEach((s, idx) => s.classList.toggle('active', idx === heroIndex));
-    heroDots.forEach((d, idx) => d.classList.toggle('active', idx === heroIndex));
+    heroDots.forEach((d, idx) => {
+      d.classList.toggle('active', idx === heroIndex);
+      // Reset the progress animation by forcing a reflow
+      if(idx === heroIndex && !prefersReduced){
+        d.style.animation = 'none';
+        d.offsetHeight; // trigger reflow
+        d.style.animation = '';
+      }
+    });
   }
   function startHeroAuto(){
     clearInterval(heroTimer);
@@ -47,6 +55,8 @@ if(heroBgEl){
       heroTimer = setInterval(() => showHeroSlide(heroIndex + 1), 5500);
     }
   }
+  // Draw the first kicker line immediately since it's in the hero (not in a .reveal)
+  document.querySelectorAll('.hero-anim .kicker::before, .hero-inner .kicker').forEach(k => k.classList.add('drawn'));
   startHeroAuto();
   heroDots.forEach((dot, idx) => dot.addEventListener('click', () => { showHeroSlide(idx); startHeroAuto(); }));
   let heroTouchX = 0;
@@ -178,13 +188,26 @@ const contactSection = document.getElementById('contact');
 const heroSection = document.querySelector('.hero');
 if(floatBook && contactSection && heroSection){
   let contactInView = false;
+  let floatVisible = false;
   const contactIO = new IntersectionObserver((entries) => {
     entries.forEach(entry => { contactInView = entry.isIntersecting; });
   }, { threshold: 0.1 });
   contactIO.observe(contactSection);
   window.addEventListener('scroll', () => {
-    const pastHero = window.scrollY > heroSection.offsetHeight * 0.8;
-    floatBook.classList.toggle('show', pastHero && !contactInView);
+    const shouldShow = window.scrollY > heroSection.offsetHeight * 0.8 && !contactInView;
+    if(shouldShow && !floatVisible){
+      floatBook.classList.remove('hide');
+      floatBook.classList.add('show');
+      floatVisible = true;
+    } else if(!shouldShow && floatVisible){
+      floatBook.classList.remove('show');
+      floatBook.classList.add('hide');
+      floatVisible = false;
+      // Re-enable bounce animation on next show
+      floatBook.addEventListener('animationend', () => {
+        if(!floatVisible) floatBook.classList.remove('hide');
+      }, { once: true });
+    }
   }, { passive:true });
 }
 
