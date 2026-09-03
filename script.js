@@ -70,7 +70,15 @@ if (heroBgEl) {
 
   function showHeroSlide(i) {
     heroIndex = (i + heroSlides.length) % heroSlides.length;
-    heroSlides.forEach((s, idx) => s.classList.toggle('active', idx === heroIndex));
+    heroSlides.forEach((s, idx) => {
+      const isActive = idx === heroIndex;
+      const isNext   = idx === (heroIndex + 1) % heroSlides.length;
+      // Lazy-load: paint background only when the slide is about to be seen
+      if ((isActive || isNext) && s.dataset.src && !s.style.backgroundImage) {
+        s.style.backgroundImage = `url('${s.dataset.src}')`;
+      }
+      s.classList.toggle('active', isActive);
+    });
     heroDots.forEach((d, idx) => {
       d.classList.toggle('active', idx === heroIndex);
       if (idx === heroIndex && !prefersReduced) {
