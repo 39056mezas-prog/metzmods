@@ -410,24 +410,14 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;back
 
 /* Gradient headline shimmer — "Real Performance." catches the light */
 .gradient-text{
-  background: linear-gradient(90deg,
-    #f21418 0%,
-    #fe7303 15%,
-    #fab808 30%,
-    #fff6c0 44%,
-    #ffd000 50%,
-    #fff6c0 56%,
-    #fab808 70%,
-    #fe7303 85%,
-    #f21418 100%
-  );
-  background-size: 250% 100%;
-  background-position: 50% 50%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-  will-change: background-position;
+  background:var(--gradient);
+  background-size:200% 100%;
+  background-position:50% 50%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  color:transparent;
+  will-change:background-position;
 }
 
 /* Icon badge mechanical spin on service card hover */

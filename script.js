@@ -245,55 +245,25 @@ if (galleryTrack) {
 }
 
 // ─── Interactive gradient text ────────────────────────────────────────────────
-// Mouse → gradient position on desktop. Touch drag + gyroscope on mobile.
+// Mouse position on desktop, touch drag on mobile.
 const gradientTextEl = document.querySelector('.hero-inner .gradient-text');
 if (gradientTextEl && !prefersReduced) {
-  let target  = 50; // gradient position %, starts centered
+  let target  = 50;
   let current = 50;
-  let gyroReady = false;
 
-  // Lerp loop — runs at 60fps, smoothly chases target
   (function lerpLoop() {
     current += (target - current) * 0.08;
     gradientTextEl.style.backgroundPosition = `${current.toFixed(2)}% 50%`;
     requestAnimationFrame(lerpLoop);
   })();
 
-  // Desktop: mouse X → gradient position
   window.addEventListener('mousemove', e => {
     target = (e.clientX / window.innerWidth) * 100;
   }, { passive: true });
 
-  // Mobile: touch drag → gradient position
   window.addEventListener('touchmove', e => {
     target = (e.touches[0].clientX / window.innerWidth) * 100;
   }, { passive: true });
-
-  // Gyroscope: gamma = left/right tilt (-90° to 90°)
-  function handleOrientation(e) {
-    if (e.gamma === null) return;
-    const clamped = Math.max(-50, Math.min(50, e.gamma)); // ±50° range
-    target = ((clamped + 50) / 100) * 100;
-  }
-
-  function startGyro() {
-    if (gyroReady) return;
-    gyroReady = true;
-    if (typeof DeviceOrientationEvent?.requestPermission === 'function') {
-      // iOS 13+ requires a user-gesture to grant permission
-      DeviceOrientationEvent.requestPermission()
-        .then(p => { if (p === 'granted') window.addEventListener('deviceorientation', handleOrientation); })
-        .catch(() => {});
-    } else {
-      // Android / non-gated browsers — add listener directly
-      window.addEventListener('deviceorientation', handleOrientation);
-    }
-  }
-
-  // Trigger gyro on first touch (satisfies iOS user-gesture requirement)
-  window.addEventListener('touchstart', startGyro, { once: true, passive: true });
-  // Android doesn't need the gesture gate — try immediately
-  if (typeof DeviceOrientationEvent?.requestPermission !== 'function') startGyro();
 }
 const header = document.getElementById('site-header');
 if (header) {
