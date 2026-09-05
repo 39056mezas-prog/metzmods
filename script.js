@@ -39,7 +39,9 @@ function toggleMenu(open) {
   if (open) closeMenu.focus();
   if (navBackdrop) navBackdrop.classList.toggle('show', open);
   openMenu.setAttribute('aria-expanded', String(open));
-  document.body.style.overflow = open ? 'hidden' : '';
+  // Apply to documentElement — more reliable than body on Android Chrome
+  document.documentElement.style.overflow = open ? 'hidden' : '';
+  document.body.classList.toggle('menu-open', open);
 }
 openMenu.addEventListener('click', () => toggleMenu(true));
 closeMenu.addEventListener('click',  () => toggleMenu(false));
@@ -182,12 +184,12 @@ if (galleryTrack) {
       lightbox.classList.add('open');
       lightboxClose.focus(); // move focus inside dialog
     });
-    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
   }
 
   function closeLightbox() {
     lightbox.classList.remove('open');
-    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
     setTimeout(() => {
       lightbox.hidden = true;
       lbLastFocus?.focus(); // restore focus to trigger element
