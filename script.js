@@ -35,23 +35,12 @@ const navLinks    = document.getElementById('navLinks');
 const navBackdrop = document.getElementById('navBackdrop');
 
 function toggleMenu(open) {
-  if (open) {
-    navLinks.style.display = 'flex';
-    navLinks.offsetHeight; // force reflow
-    navLinks.classList.add('open');
-    closeMenu.focus();
-  } else {
-    navLinks.classList.remove('open');
-  }
+  navLinks.classList.toggle('open', open);
+  if (open) closeMenu.focus();
   if (navBackdrop) navBackdrop.classList.toggle('show', open);
   openMenu.setAttribute('aria-expanded', String(open));
   document.body.style.overflow = open ? 'hidden' : '';
 }
-navLinks.addEventListener('transitionend', e => {
-  if (e.propertyName === 'transform' && !navLinks.classList.contains('open')) {
-    navLinks.style.display = 'none';
-  }
-});
 openMenu.addEventListener('click', () => toggleMenu(true));
 closeMenu.addEventListener('click',  () => toggleMenu(false));
 navLinks.querySelectorAll('a[data-nav]').forEach(a => a.addEventListener('click', () => toggleMenu(false)));
@@ -80,8 +69,10 @@ if (heroBgEl) {
       s.classList.toggle('active', isActive);
     });
     heroDots.forEach((d, idx) => {
-      d.classList.toggle('active', idx === heroIndex);
-      if (idx === heroIndex && !prefersReduced) {
+      const isActive = idx === heroIndex;
+      d.classList.toggle('active', isActive);
+      d.setAttribute('aria-current', String(isActive));
+      if (isActive && !prefersReduced) {
         d.style.animation = 'none';
         d.offsetHeight; // reflow to restart keyframe
         d.style.animation = '';
@@ -212,6 +203,14 @@ if (galleryTrack) {
     slide.addEventListener('click', () => openLightbox(Number(slide.dataset.lightboxIndex)));
   });
 
+  // Keyboard access — Enter or Space opens lightbox for focused slide
+  galleryTrack.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      const slide = e.target.closest('.gallery-slide');
+      if (slide) { e.preventDefault(); openLightbox(Number(slide.dataset.lightboxIndex)); }
+    }
+  });
+
   lightboxClose.addEventListener('click', closeLightbox);
   lightboxPrev.addEventListener('click',  () => stepLightbox(-1));
   lightboxNext.addEventListener('click',  () => stepLightbox( 1));
@@ -245,7 +244,57 @@ if (galleryTrack) {
   }, { passive: true });
 }
 
-// ─── Sticky header ───────────────────────────────────────────────────────────
+// ─── Interactive gradient text ────────────────────────────────────────────────
+// Mouse → gradient position on desktop. Touch drag + gyroscope on mobile.
+const gradientTextEl = document.querySelector('.hero-inner .gradient-text');
+if (gradientTextEl && !prefersReduced) {
+  let target  = 50; // gradient position %, starts centered
+  let current = 50;
+  let gyroReady = false;
+
+  // Lerp loop — runs at 60fps, smoothly chases target
+  (function lerpLoop() {
+    current += (target - current) * 0.08;
+    gradientTextEl.style.backgroundPosition = `${current.toFixed(2)}% 50%`;
+    requestAnimationFrame(lerpLoop);
+  })();
+
+  // Desktop: mouse X → gradient position
+  window.addEventListener('mousemove', e => {
+    target = (e.clientX / window.innerWidth) * 100;
+  }, { passive: true });
+
+  // Mobile: touch drag → gradient position
+  window.addEventListener('touchmove', e => {
+    target = (e.touches[0].clientX / window.innerWidth) * 100;
+  }, { passive: true });
+
+  // Gyroscope: gamma = left/right tilt (-90° to 90°)
+  function handleOrientation(e) {
+    if (e.gamma === null) return;
+    const clamped = Math.max(-50, Math.min(50, e.gamma)); // ±50° range
+    target = ((clamped + 50) / 100) * 100;
+  }
+
+  function startGyro() {
+    if (gyroReady) return;
+    gyroReady = true;
+    if (typeof DeviceOrientationEvent?.requestPermission === 'function') {
+      // iOS 13+ requires a user-gesture to grant permission
+      DeviceOrientationEvent.requestPermission()
+        .then(p => { if (p === 'granted') window.addEventListener('deviceorientation', handleOrientation); })
+        .catch(() => {});
+    } else {
+      // Android / non-gated browsers — add listener directly
+      window.addEventListener('deviceorientation', handleOrientation);
+    }
+  }
+
+  // Trigger gyro on first touch (satisfies iOS user-gesture requirement)
+  window.addEventListener('touchstart', startGyro, { once: true, passive: true });
+  // Android doesn't need the gesture gate — try immediately
+  if (typeof DeviceOrientationEvent?.requestPermission !== 'function') startGyro();
+}
 const header = document.getElementById('site-header');
 if (header) {
   addScrollHandler(() => header.classList.toggle('scrolled', window.scrollY > 10));
