@@ -28,23 +28,6 @@ if (!prefersReduced) {
   });
 }
 
-// ─── Real viewport height tracker ────────────────────────────────────────────
-// Mobile browsers can report a stale height at the exact moment an element
-// first renders (before the address bar finishes settling). CSS svh/dvh units
-// don't always update instantly on some Android browsers. Measuring directly
-// via JS and forcing a fresh read right before the menu opens eliminates the
-// "opens oversized, then snaps to correct size on first touch" glitch.
-function setViewportHeightVar() {
-  const h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-  document.documentElement.style.setProperty('--app-vh', `${h}px`);
-}
-setViewportHeightVar();
-window.addEventListener('resize', setViewportHeightVar, { passive: true });
-window.addEventListener('orientationchange', setViewportHeightVar, { passive: true });
-if (window.visualViewport) {
-  window.visualViewport.addEventListener('resize', setViewportHeightVar, { passive: true });
-}
-
 // ─── Mobile menu ─────────────────────────────────────────────────────────────
 const openMenu    = document.getElementById('openMenu');
 const closeMenu   = document.getElementById('closeMenu');
@@ -52,7 +35,6 @@ const navLinks    = document.getElementById('navLinks');
 const navBackdrop = document.getElementById('navBackdrop');
 
 function toggleMenu(open) {
-  if (open) setViewportHeightVar(); // force a fresh, accurate read right before showing
   navLinks.classList.toggle('open', open);
   if (open) closeMenu.focus();
   if (navBackdrop) navBackdrop.classList.toggle('show', open);
