@@ -104,7 +104,7 @@ p{color:var(--gray);}
 @media (max-width:520px){.utility-bar{display:none;}}
 
 /* ============ HEADER / NAV ============ */
-header{position:sticky;top:0;z-index:100;background:rgba(10,10,10,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);transition:box-shadow .3s;}
+header{position:sticky;top:0;z-index:100;background:rgba(10,10,10,.96);border-bottom:1px solid var(--border);transition:box-shadow .3s;}
 header.scrolled{box-shadow:0 10px 30px -12px rgba(0,0,0,.6);}
 nav{display:flex;align-items:center;justify-content:space-between;gap:24px;height:80px;}
 .brand{display:flex;align-items:center;flex-shrink:0;}
