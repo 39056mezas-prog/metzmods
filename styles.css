@@ -106,7 +106,7 @@ p{color:var(--gray);}
 /* ============ HEADER / NAV ============ */
 header{position:sticky;top:0;z-index:100;background:rgba(10,10,10,.96);border-bottom:1px solid var(--border);transition:box-shadow .3s;}
 header.scrolled{box-shadow:0 10px 30px -12px rgba(0,0,0,.6);}
-nav{display:flex;align-items:center;justify-content:space-between;gap:24px;height:80px;}
+header nav{display:flex;align-items:center;justify-content:space-between;gap:24px;height:80px;}
 .brand{display:flex;align-items:center;flex-shrink:0;}
 .brand-logo{width:220px;aspect-ratio:1722/141;height:auto;display:block;}
 @media (max-width:480px){.brand-logo{width:170px;}}
