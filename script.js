@@ -28,6 +28,18 @@ if (!prefersReduced) {
   });
 }
 
+// ─── Logo click: scroll to top on the homepage, navigate home from subpages ─
+const isHomePage = location.pathname === '/' || location.pathname === '' || location.pathname.endsWith('/index.html');
+document.querySelectorAll('.brand').forEach(link => {
+  link.addEventListener('click', e => {
+    if (isHomePage) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: prefersReduced ? 'auto' : 'smooth' });
+    }
+    // else: link navigates normally to "/"
+  });
+});
+
 // ─── Mobile menu ─────────────────────────────────────────────────────────────
 const openMenu    = document.getElementById('openMenu');
 const closeMenu   = document.getElementById('closeMenu');
