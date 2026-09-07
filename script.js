@@ -103,6 +103,97 @@ if (heroBgEl) {
   }, { passive: true });
 }
 
+// ─── Lightbox (shared modal — used by gallery slides and location photos) ───
+const lightbox = document.getElementById('lightbox');
+let openLightboxWith = null; // assigned below; other blocks call this to open the shared modal
+
+if (lightbox) {
+  const lightboxImg     = document.getElementById('lightboxImg');
+  const lightboxCaption = document.getElementById('lightboxCaption');
+  const lightboxClose   = document.getElementById('lightboxClose');
+  const lightboxPrev    = document.getElementById('lightboxPrev');
+  const lightboxNext    = document.getElementById('lightboxNext');
+
+  let slides      = [];
+  let lbIndex     = 0;
+  let lbLastFocus = null; // element to return focus to on close
+
+  // All focusable elements inside the lightbox (for focus trap)
+  function getLbFocusable() {
+    return [...lightbox.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    )].filter(el => !el.disabled);
+  }
+
+  function renderLightbox() {
+    lightboxImg.classList.remove('show');
+    lightboxImg.src     = slides[lbIndex].src;
+    lightboxImg.alt     = slides[lbIndex].alt;
+    lightboxCaption.textContent = slides[lbIndex].caption;
+    lightboxImg.onload  = () => lightboxImg.classList.add('show');
+  }
+
+  function openLightbox(newSlides, i) {
+    slides      = newSlides;
+    lbLastFocus = document.activeElement; // save so we can restore on close
+    lbIndex     = i;
+    renderLightbox();
+    lightbox.hidden = false;
+    requestAnimationFrame(() => {
+      lightbox.classList.add('open');
+      lightboxClose.focus(); // move focus inside dialog
+    });
+    document.documentElement.style.overflow = 'hidden';
+  }
+  openLightboxWith = openLightbox; // expose to gallery/location wiring below
+
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    document.documentElement.style.overflow = '';
+    setTimeout(() => {
+      lightbox.hidden = true;
+      lbLastFocus?.focus(); // restore focus to trigger element
+    }, 300);
+  }
+
+  function stepLightbox(dir) {
+    lbIndex = (lbIndex + dir + slides.length) % slides.length;
+    renderLightbox();
+  }
+
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightboxPrev.addEventListener('click',  () => stepLightbox(-1));
+  lightboxNext.addEventListener('click',  () => stepLightbox( 1));
+  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+
+  document.addEventListener('keydown', e => {
+    if (lightbox.hidden) return;
+    if (e.key === 'Escape')     { closeLightbox(); return; }
+    if (e.key === 'ArrowLeft')  { stepLightbox(-1); return; }
+    if (e.key === 'ArrowRight') { stepLightbox( 1); return; }
+
+    // Focus trap: keep Tab inside the dialog
+    if (e.key === 'Tab') {
+      const focusable = getLbFocusable();
+      if (!focusable.length) { e.preventDefault(); return; }
+      const first = focusable[0];
+      const last  = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last)  { e.preventDefault(); first.focus(); }
+      }
+    }
+  });
+
+  let lbTouchX = 0;
+  lightbox.addEventListener('touchstart', e => { lbTouchX = e.touches[0].clientX; }, { passive: true });
+  lightbox.addEventListener('touchend',   e => {
+    const dx = e.changedTouches[0].clientX - lbTouchX;
+    if (Math.abs(dx) > 40) stepLightbox(dx > 0 ? -1 : 1);
+  }, { passive: true });
+}
+
 // ─── Gallery carousel ────────────────────────────────────────────────────────
 const galleryTrack = document.getElementById('galleryTrack');
 if (galleryTrack) {
@@ -142,108 +233,50 @@ if (galleryTrack) {
   // Prevent accidental click after a drag
   galleryTrack.addEventListener('click', e => { if (dragMoved) e.preventDefault(); }, true);
 
-  // ─── Lightbox ───────────────────────────────────────────────────────────
-  const lightbox        = document.getElementById('lightbox');
-  const lightboxImg     = document.getElementById('lightboxImg');
-  const lightboxCaption = document.getElementById('lightboxCaption');
-  const lightboxClose   = document.getElementById('lightboxClose');
-  const lightboxPrev    = document.getElementById('lightboxPrev');
-  const lightboxNext    = document.getElementById('lightboxNext');
-
-  const slides = [...galleryTrack.querySelectorAll('.gallery-slide')].map(slide => ({
+  const gallerySlides = [...galleryTrack.querySelectorAll('.gallery-slide')].map(slide => ({
     src:     slide.querySelector('img').getAttribute('src'),
     alt:     slide.querySelector('img').getAttribute('alt') || '',
     caption: slide.querySelector('.build-caption')?.textContent ?? ''
   }));
 
-  let lbIndex         = 0;
-  let lbLastFocus     = null; // element to return focus to on close
-
-  // All focusable elements inside the lightbox (for focus trap)
-  function getLbFocusable() {
-    return [...lightbox.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    )].filter(el => !el.disabled);
-  }
-
-  function renderLightbox() {
-    lightboxImg.classList.remove('show');
-    lightboxImg.src     = slides[lbIndex].src;
-    lightboxImg.alt     = slides[lbIndex].alt;
-    lightboxCaption.textContent = slides[lbIndex].caption;
-    lightboxImg.onload  = () => lightboxImg.classList.add('show');
-  }
-
-  function openLightbox(i) {
-    if (dragMoved) return;
-    lbLastFocus = document.activeElement; // save so we can restore on close
-    lbIndex     = i;
-    renderLightbox();
-    lightbox.hidden = false;
-    requestAnimationFrame(() => {
-      lightbox.classList.add('open');
-      lightboxClose.focus(); // move focus inside dialog
-    });
-    document.documentElement.style.overflow = 'hidden';
-  }
-
-  function closeLightbox() {
-    lightbox.classList.remove('open');
-    document.documentElement.style.overflow = '';
-    setTimeout(() => {
-      lightbox.hidden = true;
-      lbLastFocus?.focus(); // restore focus to trigger element
-    }, 300);
-  }
-
-  function stepLightbox(dir) {
-    lbIndex = (lbIndex + dir + slides.length) % slides.length;
-    renderLightbox();
-  }
-
-  galleryTrack.querySelectorAll('.gallery-slide').forEach(slide => {
-    slide.addEventListener('click', () => openLightbox(Number(slide.dataset.lightboxIndex)));
+  galleryTrack.querySelectorAll('.gallery-slide').forEach((slide, i) => {
+    slide.addEventListener('click', () => { if (!dragMoved) openLightboxWith?.(gallerySlides, i); });
   });
 
   // Keyboard access — Enter or Space opens lightbox for focused slide
   galleryTrack.addEventListener('keydown', e => {
     if (e.key === 'Enter' || e.key === ' ') {
       const slide = e.target.closest('.gallery-slide');
-      if (slide) { e.preventDefault(); openLightbox(Number(slide.dataset.lightboxIndex)); }
-    }
-  });
-
-  lightboxClose.addEventListener('click', closeLightbox);
-  lightboxPrev.addEventListener('click',  () => stepLightbox(-1));
-  lightboxNext.addEventListener('click',  () => stepLightbox( 1));
-  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
-
-  document.addEventListener('keydown', e => {
-    if (lightbox.hidden) return;
-    if (e.key === 'Escape')     { closeLightbox(); return; }
-    if (e.key === 'ArrowLeft')  { stepLightbox(-1); return; }
-    if (e.key === 'ArrowRight') { stepLightbox( 1); return; }
-
-    // Focus trap: keep Tab inside the dialog
-    if (e.key === 'Tab') {
-      const focusable = getLbFocusable();
-      if (!focusable.length) { e.preventDefault(); return; }
-      const first = focusable[0];
-      const last  = focusable[focusable.length - 1];
-      if (e.shiftKey) {
-        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
-      } else {
-        if (document.activeElement === last)  { e.preventDefault(); first.focus(); }
+      if (slide) {
+        e.preventDefault();
+        const i = [...galleryTrack.querySelectorAll('.gallery-slide')].indexOf(slide);
+        openLightboxWith?.(gallerySlides, i);
       }
     }
   });
+}
 
-  let lbTouchX = 0;
-  lightbox.addEventListener('touchstart', e => { lbTouchX = e.touches[0].clientX; }, { passive: true });
-  lightbox.addEventListener('touchend',   e => {
-    const dx = e.changedTouches[0].clientX - lbTouchX;
-    if (Math.abs(dx) > 40) stepLightbox(dx > 0 ? -1 : 1);
-  }, { passive: true });
+// ─── Location photos (shares the same lightbox as the gallery) ──────────────
+const locationPhotos = document.querySelectorAll('.location-photo');
+if (locationPhotos.length) {
+  const locationSlides = [...locationPhotos].map(photo => {
+    const img = photo.querySelector('img');
+    return {
+      src:     img.getAttribute('src'),
+      alt:     img.getAttribute('alt') || '',
+      caption: img.dataset.caption || img.getAttribute('alt') || ''
+    };
+  });
+
+  locationPhotos.forEach((photo, i) => {
+    photo.addEventListener('click', () => openLightboxWith?.(locationSlides, i));
+    photo.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openLightboxWith?.(locationSlides, i);
+      }
+    });
+  });
 }
 
 // ─── Interactive gradient text ────────────────────────────────────────────────

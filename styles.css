@@ -372,13 +372,15 @@ header nav{display:flex;align-items:center;justify-content:space-between;gap:24p
 
 /* ============ LOCATION ============ */
 .location-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:24px;margin-bottom:40px;}
-.location-map{position:relative;aspect-ratio:4/3;border:1px solid var(--border);overflow:hidden;}
+.location-map{position:relative;aspect-ratio:16/11;border:1px solid var(--border);overflow:hidden;}
 .location-map iframe{width:100%;height:100%;display:block;filter:grayscale(.25) contrast(1.08);}
 .location-photos{display:grid;grid-template-rows:1fr 1fr;gap:24px;}
-.location-photo{position:relative;overflow:hidden;border:1px solid var(--border);transition:box-shadow .35s ease;}
+.location-photo{position:relative;overflow:hidden;border:1px solid var(--border);transition:box-shadow .35s ease;cursor:zoom-in;}
 .location-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s cubic-bezier(.4,0,.2,1);}
 .location-photo:hover{box-shadow:0 0 0 2px var(--orange),0 0 28px -4px var(--orange-a40);}
 .location-photo:hover img{transform:scale(1.06);}
+.location-photo:focus-visible{outline:2px solid var(--yellow);outline-offset:3px;}
+.location-actions{display:flex;gap:16px;flex-wrap:wrap;}
 @media (max-width:800px){
   .location-grid{grid-template-columns:1fr;gap:20px;}
   .location-map{aspect-ratio:16/10;}
