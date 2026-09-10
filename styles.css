@@ -534,9 +534,10 @@ section { position: relative; }
 
 .hero__media {
   position: absolute;
-  inset: -10% 0 -10% 0;
+  inset: 0;
   z-index: 0;
   will-change: transform;
+  transform-origin: center;
 }
 .hero__media img {
   width: 100%;
@@ -544,6 +545,15 @@ section { position: relative; }
   object-fit: cover;
   object-position: 54% 55%;
   filter: saturate(1.08) contrast(1.05) brightness(0.95);
+}
+
+/* Resting overscan so the scroll parallax (applied via JS transform)
+   always has buffer to translate/scale into without revealing an
+   edge. Scoped to no-preference so reduced-motion users get the
+   image at its true, un-zoomed framing. inset:0 above is what
+   reliably fills the section — this scale is purely cosmetic bleed. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero__media { transform: scale(1.14); }
 }
 
 /* A light graphite/red wash ties the photo to the brand without

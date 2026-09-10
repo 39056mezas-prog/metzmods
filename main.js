@@ -94,8 +94,11 @@
       var y = window.scrollY;
       if (y < heroHeight * 1.15) {
         var progress = Math.min(y / heroHeight, 1);
-        var translate = progress * heroHeight * 0.22;
-        var scale = 1 + progress * 0.08;
+        // Base scale (1.14, set in CSS) provides the overscan buffer;
+        // translate distance is kept safely within it at every point
+        // in the scroll range so no edge is ever revealed.
+        var translate = progress * heroHeight * 0.08;
+        var scale = 1.14 + progress * 0.06;
         media.style.transform = "translate3d(0," + translate + "px,0) scale(" + scale + ")";
       }
       ticking = false;
