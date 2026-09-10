@@ -199,7 +199,8 @@ p.wide { max-width: none; }
   font-size: 0.92rem;
   color: var(--ink-faint);
 }
-.eyebrow--dark .eyebrow__bottom { color: var(--on-dark-soft); }
+.eyebrow--dark .eyebrow__top { text-shadow: 0 1px 8px rgba(0,0,0,0.6); }
+.eyebrow--dark .eyebrow__bottom { color: var(--on-dark-soft); text-shadow: 0 1px 8px rgba(0,0,0,0.5); }
 
 /* ---------- Layout utilities ---------- */
 .wrap {
@@ -568,18 +569,19 @@ section { position: relative; }
 
 /* A light graphite/red wash ties the photo to the brand without
    flattening it to grayscale — this hero is a real place, not
-   equipment, so it keeps its color. */
+   equipment, so it keeps its color. Kept deliberately subtle: the
+   photo needs to stay clearly visible, not read as a dark block. */
 .hero__duotone {
   grid-area: 1 / 1;
   z-index: 1;
   background:
-    linear-gradient(160deg, rgba(15,15,16,0.4) 0%, rgba(90,10,12,0.16) 45%, rgba(15,15,16,0.32) 100%);
+    linear-gradient(160deg, rgba(15,15,16,0.22) 0%, rgba(90,10,12,0.1) 45%, rgba(15,15,16,0.18) 100%);
   mix-blend-mode: multiply;
 }
 .hero__scrim {
   grid-area: 1 / 1;
   z-index: 2;
-  background: linear-gradient(0deg, rgba(12,12,13,0.88) 0%, rgba(12,12,13,0.32) 44%, rgba(12,12,13,0.22) 64%, rgba(12,12,13,0.3) 100%);
+  background: linear-gradient(0deg, rgba(10,10,11,0.5) 0%, rgba(10,10,11,0.18) 40%, rgba(10,10,11,0.1) 62%, rgba(10,10,11,0.2) 100%);
 }
 
 /* Signature diagonal reveal into the next section */
@@ -615,12 +617,16 @@ section { position: relative; }
 .hero__headline {
   color: var(--white);
 }
-.hero__headline .h-display { color: var(--white); }
+.hero__headline .h-display {
+  color: var(--white);
+  text-shadow: 0 2px 24px rgba(0,0,0,0.45), 0 1px 4px rgba(0,0,0,0.7);
+}
 
 .hero__lede {
-  color: rgba(255,255,255,0.82);
+  color: rgba(255,255,255,0.88);
   margin-top: 1.2rem;
   max-width: 40em;
+  text-shadow: 0 1px 12px rgba(0,0,0,0.5);
 }
 
 .hero__ctas {
